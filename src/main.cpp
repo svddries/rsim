@@ -2,8 +2,6 @@
 #include "behavior.h"
 #include "update.h"
 
-#include <png.h>
-
 class TestBehavior : public Behavior
 {
 
