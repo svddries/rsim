@@ -2,7 +2,7 @@
 #define RSIM_BEHAVIOR_H_
 
 class World;
-class Update;
+class WorldUpdate;
 
 class Behavior
 {
@@ -13,7 +13,7 @@ public:
 
     virtual ~Behavior() {}
 
-    virtual void update(const World& world, Update& u) {}
+    virtual void Update(const World& world, WorldUpdate& u) {}
 
 };
 

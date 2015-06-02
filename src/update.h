@@ -6,7 +6,7 @@
 
 #include <vector>
 
-struct Update
+struct WorldUpdate
 {
 
     void setTransform(Id id, const Transform3& t) { transforms.push_back(std::make_pair(id, t)); }

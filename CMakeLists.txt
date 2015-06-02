@@ -3,6 +3,11 @@ project(rsim)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+include_directories(
+    include
+    3rdparty
+)
+
 add_executable(rsim
     src/main.cpp
     src/world.cpp
@@ -13,4 +18,8 @@ add_executable(rsim
     src/object.h
     src/behavior.h
     src/update.h
+
+    src/actuators/joint.h
+    src/actuators/rotational_joint.h
+    src/actuators/prismatic_joint.h
 )

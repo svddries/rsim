@@ -41,10 +41,10 @@ void World::update(double dt)
 {
     time_ += dt;
 
-    Update up;
+    WorldUpdate up;
     for(Behavior* b : behaviors_)
     {
-        b->update(*this, up);
+        b->Update(*this, up);
     }
 
     // Update transforms

@@ -16,15 +16,13 @@ public:
 
     ~World();
 
-    Id AddObject(const Object& obj, const Transform3& t, Id parent = INVALID_ID);
+    Id AddObject(const Object& obj, const Transform3& t, Id parent = 0);
 
     void AddBehavior(Behavior* b);
 
     void update(double dt);
 
     Time time() const { return time_; }
-
-    Object& object(Id id) { return objects_[id]; }
 
     const Object& object(Id id) const { return objects_[id]; }
 
