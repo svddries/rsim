@@ -3,10 +3,64 @@
 #include "update.h"
 
 #include "actuators/prismatic_joint.h"
+#include "actuators/rotational_joint.h"
 
 #include "rapidxml/rapidxml_utils.hpp"
-
+#include <sstream>
 #include <map>
+
+// ----------------------------------------------------------------------------------------------------
+
+bool splitFloats(const std::string &s, char delim, double* elems, int n_elems) {
+    std::stringstream ss(s);
+    std::string item;
+
+    int i = 0;
+    while (std::getline(ss, item, delim))
+    {
+        if (i > n_elems)
+            return false;
+
+        elems[i++] = atof(item.c_str());
+    }
+
+    return (n_elems + 1 == i);
+}
+
+// ----------------------------------------------------------------------------------------------------
+
+bool parseTransform(rapidxml::xml_node<>* n, Transform3& t)
+{
+    if (!n)
+        return false;
+
+    rapidxml::xml_attribute<>* a_xyz = n->first_attribute("xyz");
+    rapidxml::xml_attribute<>* a_rpy = n->first_attribute("rpy");
+
+    if (a_xyz)
+    {
+        double elems[3];
+        splitFloats(a_xyz->value(), ' ', elems, 3);
+        t.t = Vec3(elems[0], elems[1], elems[2]);
+    }
+    else
+    {
+        t.t = Vec3(0, 0, 0);
+    }
+
+    if (a_rpy)
+    {
+        double elems[3];
+        splitFloats(a_rpy->value(), ' ', elems, 3);
+        t.R.setRPY(elems[0], elems[1], elems[2]);
+    }
+    else
+    {
+        t.R = Mat3::identity();
+    }
+
+    return true;
+}
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -90,6 +144,55 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
             child_id = it_child->second;
 
         world.object(child_id).parent_id = parent_id;
+
+        // Create joint
+        std::string joint_type(a_type->value());
+
+        Transform3 origin;
+        if (!parseTransform(n_joint->first_node("origin"), origin))
+            origin = Transform3::identity();
+
+        world.object(child_id).transform = origin;
+
+        Joint* joint = 0;
+        if (joint_type == "prismatic")
+        {
+            joint = new PrismaticJoint(child_id);
+        }
+        else if (joint_type == "revolute")
+        {
+            joint = new RotationalJoint(child_id);
+        }
+        else if (joint_type == "fixed")
+        {
+            // Already set the origin, so do nothing
+        }
+        else
+        {
+            std::cout << "Unknown joint type: " << joint_type << std::endl;
+        }
+
+        if (joint)
+        {
+            joint->set_origin(origin);
+
+            Transform3 axis;
+            if (parseTransform(n_joint->first_node("axis"), axis))
+            {
+                joint->set_axis(axis.t);
+            }
+            else
+                std::cout << "No axis specified in joint " << a_name->value() << std::endl;
+
+            joint->set_position_limits(-1000, 1000);
+            joint->set_max_velocity(1);
+            joint->set_acceleration(10);
+
+//            if (child_id == 20)
+//                joint->set_reference(2);
+
+            world.AddBehavior(joint);
+        }
     }
 
     // Find the root
@@ -122,26 +225,14 @@ int main(int argc, char **argv)
         }
 
         std::cout << "root id = " << robot_id << std::endl;
-        return 0;
     }
 
+//    return 0;
 
-
-    Id id = w.AddObject(Object(), Transform3::identity());
-
-    PrismaticJoint* joint = new PrismaticJoint(id);
-    joint->set_position_limits(0, 1);
-    joint->set_acceleration(20);
-    joint->set_max_velocity(1);
-
-    joint->set_reference(0.8);
-
-    w.AddBehavior(joint);
-
-    for(unsigned int i = 0; i < 1000; ++i)
+    for(unsigned int i = 0; i < 100; ++i)
     {
         w.update(0.01);
-        std::cout << w.object(0).transform << std::endl;
+//        std::cout << w.object(0).transform << std::endl;
     }
 
     return 0;

@@ -1,38 +1,44 @@
-#ifndef RSIM_WORLD_H_
-#define RSIM_WORLD_H_
+#ifndef RSIM_ACTUATORS_ROTATIONAL_JOINT_H_
+#define RSIM_ACTUATORS_ROTATIONAL_JOINT_H_
 
-#include "object.h"
+#include "joint.h"
 
-#include <vector>
-
-class Behavior;
-
-class World
+class RotationalJoint : public Joint
 {
 
 public:
 
-    World();
+    RotationalJoint(Id id) : Joint(id) {}
 
-    ~World();
+    void Update(const World& world, WorldUpdate& u)
+    {
+        if (!this->UpdatePos(world))
+            return;
 
-    Id AddObject(const Object& obj, const Transform3& t, Id parent = 0);
+        double s = sin(position());
+        double c = cos(position());
 
-    void AddBehavior(Behavior* b);
+        float& ux = axis_.x;
+        float& uy = axis_.y;
+        float& uz = axis_.z;
 
-    void update(double dt);
+        Transform3 offset;
+        offset.R.xx = c + ux * ux * (1 - c);
+        offset.R.xy = ux * uy * (1 - c) - uz * s;
+        offset.R.xz = ux * uz * (1 - c) + uy * s;
 
-    Time time() const { return time_; }
+        offset.R.yx = uy * ux * (1 - c) + uz * s;
+        offset.R.yy = c + uy * uy * (1 - c);
+        offset.R.yz = uy * uz * (1 - c) - ux * s;
 
-    const Object& object(Id id) const { return objects_[id]; }
+        offset.R.zx = uz * ux * (1 - c) - uy * s;
+        offset.R.zy = uz * uy * (1 - c) + ux * s;
+        offset.R.zz = c + uz * uz * (1 - c);
 
-private:
+        offset.t = Vec3(0, 0, 0);
 
-    std::vector<Object> objects_;
-
-    std::vector<Behavior*> behaviors_;
-
-    Time time_;
+        u.setTransform(id_, origin_ * offset);
+    }
 
 };
 

@@ -521,6 +521,7 @@ typedef Transform3T<int> Transform3i;
 typedef Transform3T<unsigned int> Transform3u;
 
 typedef Vec3f Vec3;
+typedef Mat3f Mat3;
 typedef Transform3f Transform3;
 
 #endif

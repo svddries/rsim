@@ -29,10 +29,11 @@ public:
 
     void set_acceleration(double acc) { max_acc_ = acc; }
 
-    void set_reference(double reference)
-    {
-        reference_ = reference;
-    }
+    void set_reference(double reference) { reference_ = reference; }
+
+    void set_axis(const Vec3& v) { axis_ = v.normalized(); }
+
+    void set_origin(const Transform3& t) { origin_ = t; }
 
     double position() const { return pos_; }
 
@@ -42,6 +43,9 @@ protected:
     {
         double dt = world.time() - t_last_;
         t_last_ = world.time();
+
+        if (pos_ == reference_ && vel_ == 0)
+            return false;
 
         if (reference_ > pos_)
             vel_ = std::min(max_vel_, vel_ + dt * max_acc_);
@@ -66,7 +70,7 @@ protected:
             vel_ = 0;
         }
 
-        std::cout << vel_ << std::endl;
+        std::cout << id_ << ": " << pos_ << std::endl;
 
         return true;
     }
@@ -84,6 +88,10 @@ protected:
     double pos_min_, pos_max_;
 
     double max_vel_, max_acc_;
+
+    Vec3 axis_;
+
+    Transform3 origin_;
 
 };
 

@@ -15,13 +15,8 @@ public:
         if (!this->UpdatePos(world))
             return;
 
-        std::cout << "update" << std::endl;
-
-        Transform3 t;
-        t.t = Vec3(0, 0, position());
-        t.R.setRPY(0, 0, 0);
-
-        u.setTransform(id_, t);
+        Transform3 offset(Mat3::identity(), axis_ * position());
+        u.setTransform(id_, origin_ * offset);
     }
 
 };
