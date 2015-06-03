@@ -127,7 +127,9 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
         auto it_parent = link_map.find(parent_name);
         if (it_parent == link_map.end())
         {
-            parent_id = world.AddObject(Object(), Transform3::identity());
+            Object obj;
+            obj.name = parent_name;
+            parent_id = world.AddObject(obj);
             link_map[parent_name] = parent_id;
         }
         else
@@ -137,22 +139,22 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
         auto it_child = link_map.find(child_name);
         if (it_child == link_map.end())
         {
-            child_id = world.AddObject(Object(), Transform3::identity());
+            Object obj;
+            obj.name = child_name;
+            child_id = world.AddObject(obj);
             link_map[child_name] = child_id;
         }
         else
             child_id = it_child->second;
 
-        world.object(child_id).parent_id = parent_id;
-
-        // Create joint
-        std::string joint_type(a_type->value());
-
+        // Create joint       
         Transform3 origin;
         if (!parseTransform(n_joint->first_node("origin"), origin))
             origin = Transform3::identity();
 
-        world.object(child_id).transform = origin;
+        world.SetObjectParent(child_id, parent_id, origin);
+
+        std::string joint_type(a_type->value());
 
         Joint* joint = 0;
         if (joint_type == "prismatic")
@@ -188,7 +190,7 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
             joint->set_max_velocity(1);
             joint->set_acceleration(10);
 
-//            if (child_id == 20)
+//            if (child_id == 21)
 //                joint->set_reference(2);
 
             world.AddBehavior(joint);
@@ -215,19 +217,21 @@ int main(int argc, char **argv)
 {
     World w;
 
-    if (argc > 1)
-    {
-        Id robot_id;
-        if (!loadURDF(argv[1], w, robot_id))
-        {
-            std::cout << "Could not load URDF" << std::endl;
-            return 1;
-        }
+    if (argc <= 1)
+        return 1;
 
-        std::cout << "root id = " << robot_id << std::endl;
+    Id robot_id;
+    if (!loadURDF(argv[1], w, robot_id))
+    {
+        std::cout << "Could not load URDF" << std::endl;
+        return 1;
     }
 
-//    return 0;
+    // Add robot to the world
+    Mat3 m;
+    m.setRPY(0, 0, 3.1415);
+
+    w.SetObjectParent(robot_id, w.root(), Transform3(m, Vec3(0, 0, 0)));
 
     for(unsigned int i = 0; i < 100; ++i)
     {

@@ -8,12 +8,20 @@
 
 struct Object
 {
-    Object() : parent_id(INVALID_ID), revision(0) {}
+    Object() : parent_id(INVALID_ID), revision(0), changed(false) {}
 
     Id parent_id;
+    std::vector<Id> children_ids;
+
+    uint64_t tree_index;
+
+    std::string name;
     Transform3 transform;
+    Transform3 abs_transform;
     era::geometry::Mesh mesh;
     uint64_t revision;
+
+    bool changed;
 
     bool has_parent() const { return parent_id != INVALID_ID; }
 };
