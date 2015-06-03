@@ -23,7 +23,7 @@ public:
 
     void SetObjectParent(Id child_id, Id parent_id, const Transform3& t);
 
-    void update(double dt);
+    void Update(double dt);
 
     Time time() const { return time_; }
 
@@ -43,12 +43,14 @@ private:
 
     std::vector<Id> changed_object_ids_;
 
-    bool object_list_changed_;
+    bool object_graph_changed_;
 
     std::vector<Behavior*> behaviors_;
 
     // Tree datastructure for easier depth-first walk
     std::vector<std::pair<Id, uint64_t>> tree_;
+
+    void MarkAsChanged(Id id);
 
 };
 

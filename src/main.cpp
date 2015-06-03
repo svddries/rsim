@@ -190,7 +190,7 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
             joint->set_max_velocity(1);
             joint->set_acceleration(10);
 
-//            if (child_id == 21)
+//            if (std::string(a_name->value()) == "neck_tilt_joint")
 //                joint->set_reference(2);
 
             world.AddBehavior(joint);
@@ -235,8 +235,7 @@ int main(int argc, char **argv)
 
     for(unsigned int i = 0; i < 100; ++i)
     {
-        w.update(0.01);
-//        std::cout << w.object(0).transform << std::endl;
+        w.Update(0.01);
     }
 
     return 0;

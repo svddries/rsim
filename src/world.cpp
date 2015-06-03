@@ -21,7 +21,7 @@ struct DepthFirstOrdering
 
 // ----------------------------------------------------------------------------------------------------
 
-World::World() : time_(0), object_list_changed_(false)
+World::World() : time_(0), object_graph_changed_(false)
 {
     root_ = AddObject(Object());
     objects_[root_].abs_transform = Transform3::identity();
@@ -56,13 +56,12 @@ void World::SetObjectParent(Id child_id, Id parent_id, const Transform3& t)
       Object& c = objects_[child_id];
       c.parent_id = parent_id;
       c.transform = t;
-      changed_object_ids_.push_back(child_id);
-      c.changed = true;
 
       Object& p = objects_[parent_id];
       p.children_ids.push_back(child_id);
 
-      object_list_changed_ = true;
+      object_graph_changed_ = true;
+      MarkAsChanged(child_id);
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -78,14 +77,14 @@ struct BlaNode
 
 // ----------------------------------------------------------------------------------------------------
 
-void World::update(double dt)
+void World::Update(double dt)
 {
-    if (object_list_changed_)
+    if (object_graph_changed_)
     {
         // Re-build tree object (depth-first)
         tree_.clear();
         tree_.push_back(std::make_pair(root_, 0));
-        objects_[root_].tree_index = 0;;
+        objects_[root_].tree_index = 0;
 
         std::stack<BlaNode> Q;
         Q.push(BlaNode(root_, tree_.size() - 1));
@@ -114,35 +113,30 @@ void World::update(double dt)
             }
         }
 
-//        for(auto p : tree_)
-//            std::cout << "(" << p.first << ", " << p.second << ") ";
-//        std::cout << std::endl;
-
-        object_list_changed_ = false;
+        object_graph_changed_ = false;
     }
 
-    std::cout << "Num changed: " << changed_object_ids_.size() << std::endl;
-
-    std::sort(changed_object_ids_.begin(), changed_object_ids_.end(), DepthFirstOrdering(objects_));
-
-    for(Id id : changed_object_ids_)
+    if (!changed_object_ids_.empty())
     {
-        Object& obj = objects_[id];
-        if (!obj.changed)
-            continue;
+        // Sort changed objects in depth first order
+        std::sort(changed_object_ids_.begin(), changed_object_ids_.end(), DepthFirstOrdering(objects_));
 
-        std::cout << "    " << obj.name << " " << tree_[obj.tree_index].second << std::endl;
-
-        for(unsigned int i = obj.tree_index; i < obj.tree_index + tree_[obj.tree_index].second; ++i)
+        for(Id id : changed_object_ids_)
         {
-            Object& o = objects_[tree_[i].first];
-            o.abs_transform = objects_[o.parent_id].abs_transform * o.transform;
-            std::cout << o.name << ": " << o.abs_transform << std::endl;
-            o.changed = false;
-        }
-    }
+            Object& obj = objects_[id];
+            if (!obj.changed)
+                continue;
 
-    changed_object_ids_.clear();
+            for(unsigned int i = obj.tree_index; i < obj.tree_index + tree_[obj.tree_index].second; ++i)
+            {
+                Object& o = objects_[tree_[i].first];
+                o.abs_transform = objects_[o.parent_id].abs_transform * o.transform;
+                o.changed = false;
+            }
+        }
+
+        changed_object_ids_.clear();
+    }
 
     time_ += dt;
 
@@ -157,12 +151,21 @@ void World::update(double dt)
     {
         Object& o = objects_[u.first];
         o.transform = u.second;
-
-        std::cout << "Setting " << u.first << " to " << o.transform << std::endl;
-
         ++o.revision;
 
-        o.changed = true;
-        changed_object_ids_.push_back(u.first);
+        // Mark object as changed
+        MarkAsChanged(u.first);
     }
+}
+
+// ----------------------------------------------------------------------------------------------------
+
+void World::MarkAsChanged(Id id)
+{
+    Object& o = objects_[id];
+    if (o.changed)
+        return;
+
+    o.changed = true;
+    changed_object_ids_.push_back(id);
 }

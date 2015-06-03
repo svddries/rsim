@@ -70,8 +70,6 @@ protected:
             vel_ = 0;
         }
 
-        std::cout << id_ << ": " << pos_ << std::endl;
-
         return true;
     }
 

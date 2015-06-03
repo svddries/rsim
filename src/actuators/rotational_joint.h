@@ -38,8 +38,6 @@ public:
         offset.t = Vec3(0, 0, 0);
 
         u.setTransform(id_, origin_ * offset);
-
-        std::cout << "Rotational: " << origin_ * offset << std::endl;
     }
 
 };
