@@ -31,7 +31,7 @@ public:
     }
 
     template<typename T>
-    void add(const Vector<T>& v)
+    void add(Vector<T>& v)
     {
         v.offset_ = size_;
         v.ptr_ = &data_;
