@@ -19,7 +19,22 @@ add_executable(rsim
     src/behavior.h
     src/update.h
 
+    src/geometry/mesh.h
+    src/geometry/primitives.h
+    src/geometry/primitives.cpp
+
     src/actuators/joint.h
     src/actuators/rotational_joint.h
     src/actuators/prismatic_joint.h
+
+    src/sensors/rasterizer.h
+    src/sensors/rasterizer.cpp
+    src/sensors/rgbd_camera.h
+    src/sensors/rgbd_camera.cpp
 )
+
+find_package(OpenCV REQUIRED)
+include_directories(
+    ${OpenCV_INCLUDE_DIRS}
+)
+target_link_libraries(rsim  ${OpenCV_LIBS})

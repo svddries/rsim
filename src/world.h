@@ -31,6 +31,8 @@ public:
 
     const Object& object(Id id) const { return objects_[id]; }
 
+    const std::vector<Object>& objects() const { return objects_; }
+
     Id root() const { return root_; }
 
 private:

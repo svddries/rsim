@@ -53,15 +53,18 @@ void World::AddBehavior(Behavior* b)
 
 void World::SetObjectParent(Id child_id, Id parent_id, const Transform3& t)
 {
-      Object& c = objects_[child_id];
-      c.parent_id = parent_id;
-      c.transform = t;
+    Object& c = objects_[child_id];
+    c.parent_id = parent_id;
+    c.transform = t;
 
-      Object& p = objects_[parent_id];
-      p.children_ids.push_back(child_id);
+    Object& p = objects_[parent_id];
+    p.children_ids.push_back(child_id);
 
-      object_graph_changed_ = true;
-      MarkAsChanged(child_id);
+    if (parent_id == root_)
+    {
+        object_graph_changed_ = true;
+        MarkAsChanged(child_id);
+    }
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -97,7 +100,7 @@ void World::Update(double dt)
 
             if (n.i_child < obj.children_ids.size())
             {
-                Id child_id = obj.children_ids[n.i_child++];                
+                Id child_id = obj.children_ids[n.i_child++];
                 objects_[child_id].tree_index = tree_.size();
                 tree_.push_back(std::make_pair(child_id, 0));
                 Q.push(BlaNode(child_id, tree_.size() - 1));
@@ -113,6 +116,10 @@ void World::Update(double dt)
             }
         }
 
+        for(auto p : tree_)
+            std::cout << "(" << p.first << ", " << p.second << ") ";
+        std::cout << std::endl;
+
         object_graph_changed_ = false;
     }
 
@@ -127,7 +134,7 @@ void World::Update(double dt)
             if (!obj.changed)
                 continue;
 
-            for(unsigned int i = obj.tree_index; i < obj.tree_index + tree_[obj.tree_index].second; ++i)
+            for(unsigned int i = obj.tree_index; i <= obj.tree_index + tree_[obj.tree_index].second; ++i)
             {
                 Object& o = objects_[tree_[i].first];
                 o.abs_transform = objects_[o.parent_id].abs_transform * o.transform;

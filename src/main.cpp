@@ -4,10 +4,15 @@
 
 #include "actuators/prismatic_joint.h"
 #include "actuators/rotational_joint.h"
+#include "sensors/rgbd_camera.h"
 
 #include "rapidxml/rapidxml_utils.hpp"
 #include <sstream>
 #include <map>
+
+#include "geometry/primitives.h"
+
+#include <unistd.h> // usleep
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -174,6 +179,11 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
             std::cout << "Unknown joint type: " << joint_type << std::endl;
         }
 
+        if (std::string(child_name) == "top_kinect/openni_depth_optical_frame")
+        {
+            world.AddBehavior(new RGBDCamera(child_id));
+        }
+
         if (joint)
         {
             joint->set_origin(origin);
@@ -187,11 +197,14 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
                 std::cout << "No axis specified in joint " << a_name->value() << std::endl;
 
             joint->set_position_limits(-1000, 1000);
-            joint->set_max_velocity(1);
-            joint->set_acceleration(10);
+            joint->set_max_velocity(0.5);
+            joint->set_acceleration(10);            
 
-//            if (std::string(a_name->value()) == "neck_tilt_joint")
-//                joint->set_reference(2);
+            if (std::string(a_name->value()) == "neck_tilt_joint")
+                joint->set_reference(-0.3);
+
+            if (std::string(a_name->value()) == "neck_pan_joint")
+                joint->set_reference(-0.3);
 
             world.AddBehavior(joint);
         }
@@ -229,13 +242,21 @@ int main(int argc, char **argv)
 
     // Add robot to the world
     Mat3 m;
-    m.setRPY(0, 0, 3.1415);
-
+    m.setRPY(0, 0, 0);
     w.SetObjectParent(robot_id, w.root(), Transform3(m, Vec3(0, 0, 0)));
 
-    for(unsigned int i = 0; i < 100; ++i)
+    // Add a box to the world
+    Object box;
+    box.name = "box";
+    createBox(Vec3(-0.3, -0.3, -0.3), Vec3(0.3, 0.3, 0.3), box.mesh);
+
+    Id box_id = w.AddObject(box);
+    w.SetObjectParent(box_id, w.root(), Transform3(Mat3::identity(), Vec3(4, 0.5, 1)));
+
+    while(true)
     {
         w.Update(0.01);
+        usleep(10000);
     }
 
     return 0;

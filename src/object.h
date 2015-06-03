@@ -3,8 +3,7 @@
 
 #include "types.h"
 #include "math.h"
-
-#include <era/geometry/mesh.h>
+#include "geometry/mesh.h"
 
 struct Object
 {
@@ -18,7 +17,7 @@ struct Object
     std::string name;
     Transform3 transform;
     Transform3 abs_transform;
-    era::geometry::Mesh mesh;
+    Mesh mesh;
     uint64_t revision;
 
     bool changed;
