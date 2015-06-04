@@ -4,9 +4,11 @@
 #include "../behavior.h"
 #include "../types.h"
 
-#include "rasterizer.h"
+#include "../io/package.h"
+#include "../io/value.h"
+#include "../io/vector.h"
 
-#include <vector>
+#include "rasterizer.h"
 
 class RGBDCamera : public Behavior
 {
@@ -25,7 +27,12 @@ private:
 
     Rasterizer rasterizer_;
 
-    std::vector<float> canvas_;
+    // Data
+
+    io::Package image_pkg_;
+    io::Value<uint32_t> width_;
+    io::Value<uint32_t> height_;
+    io::Vector<float> canvas_;
 
 };
 

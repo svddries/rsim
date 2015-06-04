@@ -68,7 +68,9 @@ class Package
 
 public:
 
-    Package() : size_(0), data_(0), data_is_mine_(false) {}
+    Package() : size_(0), data_(0), data_is_mine_(false)
+    {
+    }
 
     ~Package()
     {
@@ -162,7 +164,6 @@ public:
             const char* name = r.readString();
             uint64_t offset = r.read<uint64_t>();
             value_specs_[name] = offset;
-            std::cout << name << ": " << offset << std::endl;
         }
     }
 
@@ -173,6 +174,8 @@ private:
     unsigned char* data_;
 
     bool data_is_mine_;
+
+    uint64_t specification_byte_size_;
 
     std::map<std::string, uint64_t> value_specs_;
 

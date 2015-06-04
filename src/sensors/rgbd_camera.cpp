@@ -14,7 +14,14 @@ RGBDCamera::RGBDCamera(Id id) : id_(id)
     rasterizer_.setOpticalCenter(320, 240);
     rasterizer_.setOpticalTranslation(0, 0);
 
-    canvas_.resize(rasterizer_.canvas_width() * rasterizer_.canvas_height());
+    canvas_.set_capacity(rasterizer_.canvas_width() * rasterizer_.canvas_height());
+
+    image_pkg_.add("depth", canvas_);
+    image_pkg_.add("width", width_);
+    image_pkg_.add("height", height_);
+    image_pkg_.create();
+
+    canvas_.set_size(canvas_.capacity());
 }
 
 // ----------------------------------------------------------------------------------------------------
@@ -48,14 +55,32 @@ void RGBDCamera::Update(const World& world, WorldUpdate& u)
         if (o.mesh.triangles.empty())
             continue;
 
-        std::cout << "Relative pose: " << camera_pose_inv * o.abs_transform << std::endl;
-
         rasterizer_.rasterize(o.mesh, camera_pose_inv * o.abs_transform, &canvas_[0]);
     }
 
-    // Temporary: show using OpenCV
-    cv::Mat img(rasterizer_.canvas_height(), rasterizer_.canvas_width(), CV_32FC1, &canvas_[0]);
-    cv::imshow("depth", img / 8);
-    cv::waitKey(3);
+    *width_ = rasterizer_.canvas_width();
+    *height_ = rasterizer_.canvas_height();
+
+    char pkg_spec[1000];
+    image_pkg_.SerializeSpecification(pkg_spec);
+
+    {
+        io::Package pkg;
+        pkg.DeserializeSpecification(pkg_spec);
+
+        io::Vector<float> v_depth;
+        pkg.mapTo(image_pkg_.ptr());
+        pkg.map("depth", v_depth);
+
+        io::Value<uint32_t> w, h;
+        pkg.map("width", w);
+        pkg.map("height", h);
+
+        // Temporary: show using OpenCV
+        cv::Mat img(*h, *w, CV_32FC1, &v_depth[0]);
+        cv::imshow("depth", img / 8);
+        cv::waitKey(3);
+    }
+
 }
 

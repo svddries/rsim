@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
         test->a = 43;
 
-        v.resize(5);
+        v.set_size(5);
         for(int i = 0; i < v.size(); ++i)
             v[i] = i;
 
@@ -62,8 +62,8 @@ int main(int argc, char **argv)
 
         std::cout << test->a << std::endl;
 
-        for(int i = 0; i < v.size(); ++i)
-            std::cout << v[i] << std::endl;
+        for(auto a : v)
+            std::cout << a << std::endl;
     }
 
 //    std::cout << pkg.size() << std::endl;
