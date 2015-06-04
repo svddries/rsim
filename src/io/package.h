@@ -82,7 +82,7 @@ public:
         v.offset_ = size_;
         v.ptr_ = &data_;
         value_specs_[name] = size_;
-        size_ += sizeof(size_);
+        size_ += v.byte_size();
     }
 
     template<typename T>
@@ -101,7 +101,19 @@ public:
     {
         v.offset_ = size_;
         v.ptr_ = &data_;
-        size_ += sizeof(v.size()) + v.size() * sizeof(size_);
+        value_specs_[name] = size_;
+        size_ += v.byte_size();
+    }
+
+    template<typename T>
+    void map(const char* name, Vector<T>& v)
+    {
+        auto it = value_specs_.find(name);
+        if (it == value_specs_.end())
+            throw;
+
+        v.offset_ = it->second;
+        v.ptr_ = &data_;
     }
 
     void create()

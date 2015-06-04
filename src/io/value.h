@@ -22,6 +22,8 @@ public:
 
     T* operator->() { return reinterpret_cast<T*>(*ptr_ + offset_); }
 
+    uint64_t byte_size() const { return sizeof(T); }
+
 private:
 
     unsigned char** ptr_;

@@ -35,6 +35,7 @@ int main(int argc, char **argv)
 
         test->a = 43;
 
+        v.resize(5);
         for(int i = 0; i < v.size(); ++i)
             v[i] = i;
 
@@ -48,12 +49,12 @@ int main(int argc, char **argv)
         io::Value<float> width;
         io::Value<float> height;
         io::Value<TestStruct> test;
-//        io::Vector<int> v(10);
+        io::Vector<int> v;
 
         pkg.map("width", width);
         pkg.map("height", height);
         pkg.map("test", test);
-//        pkg.add("v", v);
+        pkg.map("v", v);
 
         pkg2.mapTo(pkg.ptr());
 
@@ -61,8 +62,8 @@ int main(int argc, char **argv)
 
         std::cout << test->a << std::endl;
 
-//        for(int i = 0; i < v.size(); ++i)
-//            std::cout << v[i] << std::endl;
+        for(int i = 0; i < v.size(); ++i)
+            std::cout << v[i] << std::endl;
     }
 
 //    std::cout << pkg.size() << std::endl;

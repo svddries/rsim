@@ -15,23 +15,23 @@ class Vector
 
 public:
 
-    Vector(uint64_t size = 0) : ptr_(0), size_(size)
+    Vector(uint64_t capacity = 0) : ptr_(0), capacity_(capacity)
     {
 
     }
 
     ~Vector() {}
 
-//    void resize(uint64_t size)
-//    {
-//        if (ptr_)
-//            throw;
-//        size_ = size;
-//    }
+    void resize(uint64_t s)
+    {
+        *reinterpret_cast<uint64_t*>(*ptr_ + offset_) = s;
+    }
 
-    T& operator[](uint64_t i) { return *reinterpret_cast<T*>(*ptr_ + offset_ + i * sizeof(T)); }
+    T& operator[](uint64_t i) { return *reinterpret_cast<T*>(*ptr_ + offset_ + sizeof(uint64_t) + i * sizeof(T)); }
 
-    uint64_t size() const { return size_; }
+    uint64_t size() const { return *reinterpret_cast<uint64_t*>(*ptr_ + offset_); }
+
+    uint64_t byte_size() const { return 2 * sizeof(uint64_t) + capacity_ * sizeof(T); }
 
 private:
 
@@ -39,8 +39,7 @@ private:
 
     uint64_t offset_;
 
-    uint64_t size_;
-
+    uint64_t capacity_;
 
 };
 
