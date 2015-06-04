@@ -3,7 +3,7 @@
 #include "../world.h"
 #include "../update.h"
 
-#include <opencv2/highgui/highgui.hpp>
+//#include <opencv2/highgui/highgui.hpp>
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -19,7 +19,8 @@ RGBDCamera::RGBDCamera(Id id) : id_(id)
     image_pkg_.add("depth", canvas_);
     image_pkg_.add("width", width_);
     image_pkg_.add("height", height_);
-    image_pkg_.create();
+
+    mem_.initialize("rgbd", image_pkg_);
 
     canvas_.set_size(canvas_.capacity());
 }
@@ -34,12 +35,8 @@ RGBDCamera::~RGBDCamera()
 
 void RGBDCamera::Update(const World& world, WorldUpdate& u)
 {
-    std::cout << "RGBDCamera::Update" << std::endl;
-
     // Get absolute camera pose
     Transform3 camera_pose = world.object(id_).abs_transform;
-
-    std::cout << "Camera pose: " << camera_pose << std::endl;
 
     // Correct for rasterizer frame
     camera_pose.R = camera_pose.R * Mat3(1, 0, 0, 0, -1, 0, 0, 0, -1);
@@ -61,26 +58,28 @@ void RGBDCamera::Update(const World& world, WorldUpdate& u)
     *width_ = rasterizer_.canvas_width();
     *height_ = rasterizer_.canvas_height();
 
-    char pkg_spec[1000];
-    image_pkg_.SerializeSpecification(pkg_spec);
+//    std::cout << &(*width_) << std::endl;
 
-    {
-        io::Package pkg;
-        pkg.DeserializeSpecification(pkg_spec);
+//    char pkg_spec[1000];
+//    image_pkg_.SerializeSpecification(pkg_spec);
 
-        io::Vector<float> v_depth;
-        pkg.mapTo(image_pkg_.ptr());
-        pkg.map("depth", v_depth);
+//    {
+//        io::Package pkg;
+//        pkg.DeserializeSpecification(pkg_spec);
 
-        io::Value<uint32_t> w, h;
-        pkg.map("width", w);
-        pkg.map("height", h);
+//        io::Vector<float> v_depth;
+//        pkg.mapTo(image_pkg_.ptr());
+//        pkg.map("depth", v_depth);
 
-        // Temporary: show using OpenCV
-        cv::Mat img(*h, *w, CV_32FC1, &v_depth[0]);
-        cv::imshow("depth", img / 8);
-        cv::waitKey(3);
-    }
+//        io::Value<uint32_t> w, h;
+//        pkg.map("width", w);
+//        pkg.map("height", h);
+
+//        // Temporary: show using OpenCV
+//        cv::Mat img(*h, *w, CV_32FC1, &v_depth[0]);
+//        cv::imshow("depth", img / 8);
+//        cv::waitKey(3);
+//    }
 
 }
 

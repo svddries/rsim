@@ -7,6 +7,7 @@
 #include "../io/package.h"
 #include "../io/value.h"
 #include "../io/vector.h"
+#include "../io/shared_memory.h"
 
 #include "rasterizer.h"
 
@@ -28,6 +29,8 @@ private:
     Rasterizer rasterizer_;
 
     // Data
+
+    io::SharedMemory mem_;
 
     io::Package image_pkg_;
     io::Value<uint32_t> width_;

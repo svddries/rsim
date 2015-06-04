@@ -32,23 +32,27 @@ add_executable(rsim
     src/sensors/rgbd_camera.h
     src/sensors/rgbd_camera.cpp
 
-    #src/io/value.h
-    #src/io/vector.h
-    #src/io/package.h
+    src/io/shared_memory.cpp
+    src/io/shared_memory.h
+    src/io/value.h
+    src/io/vector.h
+    src/io/package.h
 )
 
 find_package(OpenCV REQUIRED)
 include_directories(
     ${OpenCV_INCLUDE_DIRS}
 )
-target_link_libraries(rsim  ${OpenCV_LIBS})
+target_link_libraries(rsim rt ${OpenCV_LIBS})
 
 # ----------------------------------------------------------------------
 
 add_executable(rsim_test_io
     test/test_io.cpp
-
-    src/io/value.h
-    src/io/vector.h
-    src/io/package.h
 )
+
+add_executable(rsim_test_rgbd
+    test/test_rgbd.cpp
+    src/io/shared_memory.cpp
+)
+target_link_libraries(rsim_test_rgbd rt ${OpenCV_LIBS})
