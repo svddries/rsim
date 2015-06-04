@@ -13,6 +13,7 @@ struct TestStruct
 int main(int argc, char **argv)
 {
     io::Package pkg;
+    char specification[1000];
 
     {
         io::Value<float> width;
@@ -20,14 +21,14 @@ int main(int argc, char **argv)
         io::Value<TestStruct> test;
         io::Vector<int> v(10);
 
-        pkg.add(width);
-        pkg.add(height);
-        pkg.add(test);
-        pkg.add(v);
+        pkg.add("width", width);
+        pkg.add("height", height);
+        pkg.add("test", test);
+        pkg.add("v", v);
 
         std::cout << pkg.size() << std::endl;
 
-        pkg.claim();
+        pkg.create();
 
         *width = 1.23;
         *height = 4.56;
@@ -36,29 +37,32 @@ int main(int argc, char **argv)
 
         for(int i = 0; i < v.size(); ++i)
             v[i] = i;
+
+        pkg.SerializeSpecification(specification);
     }
 
     {
         io::Package pkg2;
+        pkg2.DeserializeSpecification(specification);
 
         io::Value<float> width;
         io::Value<float> height;
         io::Value<TestStruct> test;
-        io::Vector<int> v(10);
+//        io::Vector<int> v(10);
 
-        pkg2.add(width);
-        pkg2.add(height);
-        pkg2.add(test);
-        pkg2.add(v);
+        pkg.map("width", width);
+        pkg.map("height", height);
+        pkg.map("test", test);
+//        pkg.add("v", v);
 
-        pkg2.claim(pkg.ptr());
+        pkg2.mapTo(pkg.ptr());
 
         std::cout << *width << " " << *height << std::endl;
 
         std::cout << test->a << std::endl;
 
-        for(int i = 0; i < v.size(); ++i)
-            std::cout << v[i] << std::endl;
+//        for(int i = 0; i < v.size(); ++i)
+//            std::cout << v[i] << std::endl;
     }
 
 //    std::cout << pkg.size() << std::endl;
