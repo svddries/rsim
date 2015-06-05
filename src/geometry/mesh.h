@@ -17,7 +17,7 @@ struct Triangle
 
 struct Mesh
 {
-    std::vector<Vec3f> vertices;
+    std::vector<Vec3> vertices;
     std::vector<Triangle> triangles;
 
     inline unsigned int addPoint(const Vec3f& p)

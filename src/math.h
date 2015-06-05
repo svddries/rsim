@@ -524,4 +524,9 @@ typedef Vec3f Vec3;
 typedef Mat3f Mat3;
 typedef Transform3f Transform3;
 
+typedef Vec2f Vec2;
+typedef Mat2f Mat2;
+typedef Transform2f Transform2;
+
+
 #endif
