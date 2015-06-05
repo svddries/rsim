@@ -20,7 +20,7 @@ RGBDCamera::RGBDCamera(Id id) : id_(id)
     image_pkg_.add("width", width_);
     image_pkg_.add("height", height_);
 
-    mem_.initialize("rgbd", image_pkg_);
+    mem_.create("rgbd", image_pkg_);
 
     canvas_.set_size(canvas_.capacity());
 }

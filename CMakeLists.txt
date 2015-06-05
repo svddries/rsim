@@ -32,6 +32,7 @@ add_executable(rsim
     src/sensors/rgbd_camera.h
     src/sensors/rgbd_camera.cpp
 
+    src/io/memory.h
     src/io/shared_memory.cpp
     src/io/shared_memory.h
     src/io/value.h

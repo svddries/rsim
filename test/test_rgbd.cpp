@@ -12,17 +12,15 @@ int main(int argc, char **argv)
     io::SharedMemory mem;
 
     io::Package pkg;
+    mem.open("rgbd", pkg);
 
     io::Value<uint32_t> width;
     io::Value<uint32_t> height;
     io::Vector<float> v_depth;
-    v_depth.set_capacity(640 * 480);
 
-    pkg.add("depth", v_depth);
-    pkg.add("width", width);
-    pkg.add("height", height);
-
-    mem.initialize("rgbd", pkg);
+    pkg.map("depth", v_depth);
+    pkg.map("width", width);
+    pkg.map("height", height);
 
     while(true)
     {

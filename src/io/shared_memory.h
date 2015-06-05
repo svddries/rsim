@@ -18,14 +18,17 @@ public:
 
     ~SharedMemory();
 
-    void initialize(const char* name, Package& pkg);
+    void create(const char* name, Package& pkg);
+
+    void open(const char* name, Package& pkg);
 
 private:
 
     std::string shared_mem_name_;
 
     boost::interprocess::shared_memory_object shm;
-    boost::interprocess::mapped_region mem_;
+    boost::interprocess::mapped_region mem_spec_;
+    boost::interprocess::mapped_region mem_pkg_;
 
 };
 

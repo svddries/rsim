@@ -7,35 +7,39 @@
 
 #include "value.h"
 #include "vector.h"
+#include "memory.h"
+
+#include <iostream>
 
 namespace
 {
 
 struct SimpleByteWriter
 {
-    SimpleByteWriter(char* data_) : data(data_), i(0) {}
+    SimpleByteWriter(io::Buffer& data_) : data(data_) {}
 
     template<typename T>
     void write(const T& d)
     {
-        *reinterpret_cast<T*>(&data[i]) = d;
-        i += sizeof(T);
+        std::cout << "Writing" << std::endl;
+
+        void* p = data.allocate(sizeof(T));
+        *reinterpret_cast<T*>(p) = d;
     }
 
     void writeString(const char* s)
     {
         int j = 0;
-        do { data[i++] = s[j]; } while (s[j++] != '\0');
+        do { *static_cast<char*>(data.allocate(1)) = s[j]; } while (s[j++] != '\0');
     }
 
-    char* data;
-    uint64_t i;
+    io::Buffer& data;
 
 };
 
 struct SimpleByteReader
 {
-    SimpleByteReader(const char* data_) : data(data_), i(0) {}
+    SimpleByteReader(const void* data_) : data(static_cast<const char*>(data_)), i(0) {}
 
     template<typename T>
     const T& read()
@@ -52,6 +56,8 @@ struct SimpleByteReader
         ++i;
         return s;
     }
+
+    uint64_t bytes_read() const { return i; }
 
     const char* data;
     uint64_t i;
@@ -140,7 +146,7 @@ public:
 
     void* ptr() { return data_; }
 
-    void SerializeSpecification(char* specification)
+    void SerializeSpecification(Buffer& specification)
     {
         SimpleByteWriter w(specification);
         w.write<uint32_t>(0); // Write the version
@@ -151,9 +157,12 @@ public:
             w.writeString(s.first.c_str());
             w.write(s.second);
         }
+
+        std::cout << specification.size() << std::endl;
     }
 
-    void DeserializeSpecification(const char* specification)
+    // Returns the size of the specification
+    uint64_t DeserializeSpecification(const void* specification)
     {
         SimpleByteReader r(specification);
         uint32_t version = r.read<uint32_t>();
@@ -165,6 +174,8 @@ public:
             uint64_t offset = r.read<uint64_t>();
             value_specs_[name] = offset;
         }
+
+        return r.bytes_read();
     }
 
 private:

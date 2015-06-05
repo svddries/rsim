@@ -3,6 +3,7 @@
 #include "../src/io/package.h"
 #include "../src/io/value.h"
 #include "../src/io/vector.h"
+#include "../src/io/memory.h"
 
 struct TestStruct
 {
@@ -13,7 +14,7 @@ struct TestStruct
 int main(int argc, char **argv)
 {
     io::Package pkg;
-    char specification[1000];
+    io::GrowingBuffer specification;
 
     {
         io::Value<float> width;
@@ -44,7 +45,7 @@ int main(int argc, char **argv)
 
     {
         io::Package pkg2;
-        pkg2.DeserializeSpecification(specification);
+        pkg2.DeserializeSpecification(specification.ptr());
 
         io::Value<float> width;
         io::Value<float> height;
