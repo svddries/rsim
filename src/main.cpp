@@ -204,11 +204,11 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
             joint->set_max_velocity(0.5);
             joint->set_acceleration(10);            
 
-            if (std::string(a_name->value()) == "neck_tilt_joint")
-                joint->set_reference(-0.3);
+//            if (std::string(a_name->value()) == "neck_tilt_joint")
+//                joint->set_reference(-0.3);
 
-            if (std::string(a_name->value()) == "neck_pan_joint")
-                joint->set_reference(-0.3);
+//            if (std::string(a_name->value()) == "neck_pan_joint")
+//                joint->set_reference(-0.3);
 
             world.AddBehavior(joint);
         }
@@ -227,6 +227,29 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
 
     return false;
 }
+
+// ----------------------------------------------------------------------------------------------------
+
+class TestBehavior : public Behavior
+{
+
+public:
+
+    TestBehavior(Id id) : id_(id) {}
+
+    void Update(const World& world, WorldUpdate& u)
+    {
+        Transform3 t;
+        t.R.setRPY(0, 0, 2 * world.time());
+        t.t = Vec3(4, sin(2 * world.time()), 0.65);
+        u.setTransform(id_, t);
+    }
+
+private:
+
+    Id id_;
+
+};
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -252,10 +275,11 @@ int main(int argc, char **argv)
     // Add a box to the world
     Object box;
     box.name = "box";
-    createBox(Vec3(-0.3, -0.3, -0.3), Vec3(0.3, 0.3, 0.3), box.mesh);
+    createBox(Vec3(-0.4, -0.4, -0.4), Vec3(0.4, 0.4, 0.4), box.mesh);
 
     Id box_id = w.AddObject(box);
     w.SetObjectParent(box_id, w.root(), Transform3(Mat3::identity(), Vec3(4, 0.5, 0.3)));
+    w.AddBehavior(new TestBehavior(box_id));
 
     while(true)
     {

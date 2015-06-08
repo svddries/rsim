@@ -48,8 +48,6 @@ void LaserRangeFinder::Update(const World& world, WorldUpdate& u)
         if (o.mesh.triangles.empty())
             continue;
 
-        std::cout << lrf_pose_inverse * o.abs_transform << std::endl;
-
         renderer_.render(o.mesh, lrf_pose_inverse * o.abs_transform, &ranges_[0]);
     }
 
