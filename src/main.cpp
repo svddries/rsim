@@ -5,6 +5,7 @@
 #include "actuators/prismatic_joint.h"
 #include "actuators/rotational_joint.h"
 #include "sensors/rgbd_camera.h"
+#include "sensors/laser_range_finder.h"
 
 #include "rapidxml/rapidxml_utils.hpp"
 #include <sstream>
@@ -180,9 +181,12 @@ bool loadURDF(const std::string& filename, World& world, Id& root_id)
         }
 
         if (std::string(child_name) == "top_kinect/openni_depth_optical_frame")
-        {
             world.AddBehavior(new RGBDCamera(child_id));
-        }
+
+        if (std::string(child_name) == "base_laser")
+            world.AddBehavior(new LaserRangeFinder(child_id));
+
+        std::cout << child_name << std::endl;
 
         if (joint)
         {
@@ -251,7 +255,7 @@ int main(int argc, char **argv)
     createBox(Vec3(-0.3, -0.3, -0.3), Vec3(0.3, 0.3, 0.3), box.mesh);
 
     Id box_id = w.AddObject(box);
-    w.SetObjectParent(box_id, w.root(), Transform3(Mat3::identity(), Vec3(4, 0.5, 1)));
+    w.SetObjectParent(box_id, w.root(), Transform3(Mat3::identity(), Vec3(4, 0.5, 0.3)));
 
     while(true)
     {

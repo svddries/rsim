@@ -34,6 +34,9 @@ add_executable(rsim
 
     src/sensors/lrf_renderer.h
     src/sensors/lrf_renderer.cpp
+    src/sensors/laser_range_finder.h
+    src/sensors/laser_range_finder.cpp
+
 
     src/io/memory.h
     src/io/shared_memory.cpp
@@ -60,3 +63,10 @@ add_executable(rsim_test_rgbd
     src/io/shared_memory.cpp
 )
 target_link_libraries(rsim_test_rgbd rt ${OpenCV_LIBS})
+
+add_executable(rsim_test_lrf
+    test/test_lrf.cpp
+    src/io/shared_memory.cpp
+    src/sensors/lrf_renderer.cpp
+)
+target_link_libraries(rsim_test_lrf rt ${OpenCV_LIBS})

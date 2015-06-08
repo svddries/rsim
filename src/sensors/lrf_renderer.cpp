@@ -244,27 +244,28 @@ void LRFRenderer::renderLine(const Vec2& p1, const Vec2& p2, float* ranges) cons
 
 // ----------------------------------------------------------------------------------------------------
 
-void LRFRenderer::setAngleLimits(double min, double max) {
+void LRFRenderer::setAngleLimits(double min, double max)
+{
     a_min_ = min;
     a_max_ = max;
-    if (num_beams_ > 0 && a_max_ - a_min_ > 0) {
+    if (num_beams_ > 0 && a_max_ - a_min_ > 0)
         calculateRays();
-    }
 }
 
-void LRFRenderer::setRangeLimits(double min, double max) {
+void LRFRenderer::setRangeLimits(double min, double max)
+{
     range_min_ = min;
     range_max_ = max;
 }
 
 void LRFRenderer::setNumBeams(int num_beams) {
     num_beams_ = num_beams;
-    if (num_beams > 0 && a_max_ - a_min_ > 0) {
+    if (num_beams > 0 && a_max_ - a_min_ > 0)
         calculateRays();
-    }
 }
 
-void LRFRenderer::calculateRays() {
+void LRFRenderer::calculateRays()
+{
     ray_dirs_.clear();
 
     // Pre-calculate the unit direction vectors of all the rays
@@ -345,19 +346,23 @@ void LRFRenderer::calculateRays() {
     i_half_circle_ = M_PI / getAngleIncrement();
 }
 
-double LRFRenderer::getAngleMin() const {
+double LRFRenderer::getAngleMin() const
+{
     return a_min_;
 }
 
-double LRFRenderer::getAngleMax() const {
+double LRFRenderer::getAngleMax() const
+{
     return a_max_;
 }
 
-double LRFRenderer::getAngleIncrement() const {
+double LRFRenderer::getAngleIncrement() const
+{
     return (a_max_ - a_min_) / num_beams_;
 }
 
-int LRFRenderer::getAngleUpperIndex(double angle) const {
+int LRFRenderer::getAngleUpperIndex(double angle) const
+{
     int i = (angle - a_min_) / (a_max_ - a_min_) * num_beams_ + 1;
     return std::min(num_beams_, std::max(0, i));
 }
