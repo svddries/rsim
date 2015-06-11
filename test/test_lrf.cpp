@@ -33,14 +33,14 @@ int main(int argc, char **argv)
             lrf.setNumBeams(v_ranges.size());
             lrf.setRangeLimits(0, 20);
 
-            std::vector<Vec2> points(lrf.getNumBeams());
+            std::vector<era::Vec2> points(lrf.getNumBeams());
             lrf.rangesToPoints(&v_ranges[0], &points[0]);
 
             cv::Mat img(500, 500, CV_32FC1, cv::Scalar(0));
 
-            for(const Vec2& p : points)
+            for(const era::Vec2& p : points)
             {
-                Vec2 p_img = -p * 50 + Vec2(img.cols / 2, img.rows / 2);
+                era::Vec2 p_img = -p * 50 + era::Vec2(img.cols / 2, img.rows / 2);
                 cv::circle(img, cv::Point(p_img.y, p_img.x), 1, cv::Scalar(1), 1);
             }
 

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <cmath>
 
+namespace era
+{
+
 // --------------------------------------------------------------------------------
 
 template<typename T>
@@ -528,5 +531,6 @@ typedef Vec2f Vec2;
 typedef Mat2f Mat2;
 typedef Transform2f Transform2;
 
+}
 
 #endif

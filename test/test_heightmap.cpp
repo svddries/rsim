@@ -36,9 +36,9 @@ int main(int argc, char **argv)
     // Visualize triangles
     for(const era::Triangle& t : mesh.triangles)
     {
-        Vec3 v1 = mesh.vertices[t.i1];
-        Vec3 v2 = mesh.vertices[t.i2];
-        Vec3 v3 = mesh.vertices[t.i3];
+        era::Vec3 v1 = mesh.vertices[t.i1];
+        era::Vec3 v2 = mesh.vertices[t.i2];
+        era::Vec3 v3 = mesh.vertices[t.i3];
 
         v1.y = viz.rows - v1.y;
         v2.y = viz.rows - v2.y;
