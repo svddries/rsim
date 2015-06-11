@@ -73,6 +73,13 @@ target_link_libraries(era_config yaml-cpp)
 
 # ----------------------------------------------------------------------------------------------------
 
+add_library(era_filesystem
+    include/era/filesystem.h
+    src/filesystem.cpp
+)
+
+# ----------------------------------------------------------------------------------------------------
+
 add_library(era_sim
     src/sim/world.cpp
 
@@ -101,7 +108,7 @@ add_executable(rsim
     src/sim/main.cpp
 )
 
-target_link_libraries(rsim era_sim era_geometry era_io)
+target_link_libraries(rsim era_sim era_geometry era_io era_config)
 
 # ----------------------------------------------------------------------------------------------------
 
