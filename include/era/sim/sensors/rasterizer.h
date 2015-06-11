@@ -1,7 +1,7 @@
 #ifndef RSIM_SENSORS_RASTERIZER_H_
 #define RSIM_SENSORS_RASTERIZER_H_
 
-#include "../math.h"
+#include "era/geometry/math.h"
 
 class Mesh;
 

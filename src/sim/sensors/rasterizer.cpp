@@ -1,6 +1,5 @@
-#include "rasterizer.h"
-
-#include "../geometry/mesh.h"
+#include "era/sim/sensors/rasterizer.h"
+#include "era/geometry/mesh.h"
 
 void Rasterizer::rasterize(const Mesh& mesh, const Transform3f& pose, float* canvas) const
 {

@@ -1,7 +1,7 @@
-#include "rgbd_camera.h"
+#include "era/sim/sensors/rgbd_camera.h"
 
-#include "../world.h"
-#include "../update.h"
+#include "era/sim/world.h"
+#include "era/sim/update.h"
 
 //#include <opencv2/highgui/highgui.hpp>
 

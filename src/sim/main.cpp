@@ -1,17 +1,17 @@
-#include "world.h"
-#include "behavior.h"
-#include "update.h"
+#include "era/sim/world.h"
+#include "era/sim/behavior.h"
+#include "era/sim/update.h"
 
-#include "actuators/prismatic_joint.h"
-#include "actuators/rotational_joint.h"
-#include "sensors/rgbd_camera.h"
-#include "sensors/laser_range_finder.h"
+#include "era/sim/actuators/prismatic_joint.h"
+#include "era/sim/actuators/rotational_joint.h"
+#include "era/sim/sensors/rgbd_camera.h"
+#include "era/sim/sensors/laser_range_finder.h"
 
 #include "rapidxml/rapidxml_utils.hpp"
 #include <sstream>
 #include <map>
 
-#include "geometry/primitives.h"
+#include "era/geometry/primitives.h"
 
 #include <unistd.h> // usleep
 

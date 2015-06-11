@@ -1,6 +1,6 @@
-#include "world.h"
-#include "behavior.h"
-#include "update.h"
+#include "era/sim/world.h"
+#include "era/sim/behavior.h"
+#include "era/sim/update.h"
 
 #include <stack>
 #include <algorithm>

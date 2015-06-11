@@ -1,11 +1,11 @@
 #include <iostream>
 
-#include "../src/io/package.h"
-#include "../src/io/value.h"
-#include "../src/io/vector.h"
-#include "../src/io/shared_memory.h"
+#include "era/io/package.h"
+#include "era/io/value.h"
+#include "era/io/vector.h"
+#include "era/io/shared_memory.h"
 
-#include "../src/sensors/lrf_renderer.h"
+#include "era/sim/sensors/lrf_renderer.h"
 
 #include <opencv2/highgui/highgui.hpp>
 

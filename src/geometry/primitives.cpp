@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include "era/geometry/mesh.h"
 
 void createBox(const Vec3f& min, const Vec3f& max, Mesh& mesh)
 {

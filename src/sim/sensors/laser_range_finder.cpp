@@ -1,7 +1,7 @@
-#include "laser_range_finder.h"
+#include "era/sim/sensors/laser_range_finder.h"
 
-#include "../world.h"
-#include "../update.h"
+#include "era/sim/world.h"
+#include "era/sim/update.h"
 
 //#include <opencv2/highgui/highgui.hpp>
 

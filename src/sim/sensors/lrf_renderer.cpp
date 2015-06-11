@@ -1,5 +1,5 @@
-#include "lrf_renderer.h"
-#include "../geometry/mesh.h"
+#include "era/sim/sensors/lrf_renderer.h"
+#include "era/geometry/mesh.h"
 
 // ----------------------------------------------------------------------------------------------------
 

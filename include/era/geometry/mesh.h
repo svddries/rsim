@@ -1,7 +1,7 @@
 #ifndef ERA_GEOMETRY_MESH_H_
 #define ERA_GEOMETRY_MESH_H_
 
-#include "../math.h"
+#include "era/geometry/math.h"
 #include <vector>
 
 struct Triangle
