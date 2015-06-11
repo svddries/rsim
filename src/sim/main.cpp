@@ -17,6 +17,11 @@
 
 #include "era/geometry/heightmap.h"
 
+#include "era/filesystem.h"
+#include "era/config/data.h"
+#include "era/config/reader.h"
+#include "era/config/yaml.h"
+
 using namespace era;
 using namespace era::sim;
 
@@ -260,13 +265,33 @@ private:
 
 int main(int argc, char **argv)
 {
-    World w;
-
     if (argc <= 1)
+    {
+        std::cout << "Please specify simulation config" << std::endl;
+        return 1;
+    }
+
+    std::string config_filename = argv[1];
+
+    era::config::Data data;
+    if (!era::config::yaml::parseFile(config_filename, data))
         return 1;
 
+    era::config::Reader r(data);
+
+    std::string urdf_filename, heightmap_filename;
+    r.value("urdf", urdf_filename);
+    r.value("world", heightmap_filename);
+
+    // Make the paths absolute
+    std::string config_dir = era::filesystem::getParentPath(config_filename);
+    urdf_filename = config_dir + urdf_filename;
+    heightmap_filename = config_dir + heightmap_filename;
+
+    World w;
+
     Id robot_id;
-    if (!loadURDF(argv[1], w, robot_id))
+    if (!loadURDF(urdf_filename, w, robot_id))
     {
         std::cout << "Could not load URDF" << std::endl;
         return 1;
@@ -281,7 +306,7 @@ int main(int argc, char **argv)
     Object box;
     box.name = "box";
 //    createBox(Vec3(-0.4, -0.4, -0.4), Vec3(0.4, 0.4, 0.4), box.mesh);
-    era::loadHeightmap("/home/sdries/code/rsim/data/heightmap.png", 0.01, 0.5, box.mesh);
+    era::loadHeightmap(heightmap_filename, 0.01, 0.5, box.mesh);
 
     Id box_id = w.AddObject(box);
     w.SetObjectParent(box_id, w.root(), Transform3(Mat3::identity(), Vec3(4, 0.5, 0.3)));

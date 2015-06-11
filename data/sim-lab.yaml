@@ -1,0 +1,2 @@
+urdf: amigo.urdf
+world: lab/heightmap.png
