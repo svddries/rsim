@@ -18,13 +18,20 @@ set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "Enable contrib stuff in library")
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build Shared Libraries")
 add_subdirectory(external/yaml-cpp)
 
+# Polypartition
+include_directories(external/polypartition/src)
+add_library(polypartition external/polypartition/src/polypartition.cpp)
+
 # ----------------------------------------------------------------------------------------------------
 
 add_library(era_geometry
     include/era/geometry/mesh.h
     include/era/geometry/primitives.h
+    include/era/geometry/heightmap.h
     src/geometry/primitives.cpp
-)    
+    src/geometry/heightmap.cpp
+)
+target_link_libraries(era_geometry png polypartition)
 
 # ----------------------------------------------------------------------------------------------------
 
@@ -113,3 +120,6 @@ target_link_libraries(rsim_test_lrf era_io era_sim ${OpenCV_LIBS})
 
 add_executable(test_config test/test_config.cpp)
 target_link_libraries(test_config era_config ${OpenCV_LIBS})
+
+add_executable(test_heightmap test/test_heightmap.cpp)
+target_link_libraries(test_heightmap era_geometry)

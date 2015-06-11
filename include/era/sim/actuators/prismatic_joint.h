@@ -3,6 +3,11 @@
 
 #include "joint.h"
 
+namespace era
+{
+namespace sim
+{
+
 class PrismaticJoint : public Joint
 {
 
@@ -20,5 +25,8 @@ public:
     }
 
 };
+
+}
+}
 
 #endif

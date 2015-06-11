@@ -4,6 +4,9 @@
 #include "era/geometry/math.h"
 #include <vector>
 
+namespace era
+{
+
 struct Triangle
 {
     Triangle(unsigned int i1_, unsigned int i2_, unsigned int i3_)
@@ -25,6 +28,10 @@ struct Mesh
         vertices.push_back(p);
         return vertices.size() - 1;
     }
+
+    inline void addTriangle(unsigned int i1, unsigned int i2, unsigned int i3) { triangles.push_back(Triangle(i1, i2, i3)); }
 };
+
+}
 
 #endif

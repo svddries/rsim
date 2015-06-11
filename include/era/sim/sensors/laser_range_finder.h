@@ -11,6 +11,11 @@
 
 #include "lrf_renderer.h"
 
+namespace era
+{
+namespace sim
+{
+
 class LaserRangeFinder : public Behavior
 {
 
@@ -38,5 +43,8 @@ private:
     io::Vector<float> ranges_;
 
 };
+
+}
+}
 
 #endif

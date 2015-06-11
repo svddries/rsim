@@ -5,7 +5,13 @@
 
 #include <vector>
 
+namespace era
+{
+
 class Mesh;
+
+namespace sim
+{
 
 class LRFRenderer
 {
@@ -71,5 +77,8 @@ protected:
     void calculateRays();
 
 };
+
+}
+}
 
 #endif

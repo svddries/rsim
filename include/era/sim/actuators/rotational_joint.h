@@ -3,6 +3,11 @@
 
 #include "joint.h"
 
+namespace era
+{
+namespace sim
+{
+
 class RotationalJoint : public Joint
 {
 
@@ -41,5 +46,8 @@ public:
     }
 
 };
+
+}
+}
 
 #endif

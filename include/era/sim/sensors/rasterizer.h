@@ -3,7 +3,13 @@
 
 #include "era/geometry/math.h"
 
+namespace era
+{
+
 class Mesh;
+
+namespace sim
+{
 
 class Rasterizer
 {
@@ -103,5 +109,8 @@ private:
               Vec3f& p_min, Vec3f& p_mid, Vec3f& p_max) const;
 
 };
+
+}
+}
 
 #endif

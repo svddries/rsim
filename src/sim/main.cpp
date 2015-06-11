@@ -15,6 +15,11 @@
 
 #include <unistd.h> // usleep
 
+#include "era/geometry/heightmap.h"
+
+using namespace era;
+using namespace era::sim;
+
 // ----------------------------------------------------------------------------------------------------
 
 bool splitFloats(const std::string &s, char delim, double* elems, int n_elems) {
@@ -241,7 +246,7 @@ public:
     {
         Transform3 t;
         t.R.setRPY(0, 0, 2 * world.time());
-        t.t = Vec3(4, sin(2 * world.time()), 0.65);
+        t.t = Vec3(4, sin(2 * world.time()), 0.0);
         u.setTransform(id_, t);
     }
 
@@ -275,7 +280,8 @@ int main(int argc, char **argv)
     // Add a box to the world
     Object box;
     box.name = "box";
-    createBox(Vec3(-0.4, -0.4, -0.4), Vec3(0.4, 0.4, 0.4), box.mesh);
+//    createBox(Vec3(-0.4, -0.4, -0.4), Vec3(0.4, 0.4, 0.4), box.mesh);
+    era::loadHeightmap("/home/sdries/code/rsim/data/heightmap.png", 0.01, 0.5, box.mesh);
 
     Id box_id = w.AddObject(box);
     w.SetObjectParent(box_id, w.root(), Transform3(Mat3::identity(), Vec3(4, 0.5, 0.3)));

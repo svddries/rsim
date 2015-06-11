@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     {
         if (*angle_min != 0 || *angle_max != 0)
         {
-            LRFRenderer lrf;
+            era::sim::LRFRenderer lrf;
             lrf.setAngleLimits(*angle_min, *angle_max);
             lrf.setNumBeams(v_ranges.size());
             lrf.setRangeLimits(0, 20);

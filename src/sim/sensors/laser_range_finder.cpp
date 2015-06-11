@@ -3,7 +3,10 @@
 #include "era/sim/world.h"
 #include "era/sim/update.h"
 
-//#include <opencv2/highgui/highgui.hpp>
+namespace era
+{
+namespace sim
+{
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -53,4 +56,7 @@ void LaserRangeFinder::Update(const World& world, WorldUpdate& u)
 
     *angle_min_ = renderer_.getAngleMin();
     *angle_max_ = renderer_.getAngleMax();
+}
+
+}
 }

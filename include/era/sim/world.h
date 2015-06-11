@@ -6,6 +6,11 @@
 #include <vector>
 #include <queue>
 
+namespace era
+{
+namespace sim
+{
+
 class Behavior;
 
 class World
@@ -55,5 +60,8 @@ private:
     void MarkAsChanged(Id id);
 
 };
+
+}
+}
 
 #endif

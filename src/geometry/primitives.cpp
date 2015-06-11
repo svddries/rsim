@@ -1,5 +1,8 @@
 #include "era/geometry/mesh.h"
 
+namespace era
+{
+
 void createBox(const Vec3f& min, const Vec3f& max, Mesh& mesh)
 {
     int p0 = mesh.addPoint(Vec3f(min.x, min.y, min.z)); // 0
@@ -34,4 +37,6 @@ void createBox(const Vec3f& min, const Vec3f& max, Mesh& mesh)
     // bottom plane
     mesh.triangles.push_back(Triangle(p3, p2, p6));
     mesh.triangles.push_back(Triangle(p3, p6, p7));
+}
+
 }

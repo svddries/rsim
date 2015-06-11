@@ -7,6 +7,11 @@
 
 #include <limits>
 
+namespace era
+{
+namespace sim
+{
+
 class Joint : public Behavior
 {
 
@@ -93,5 +98,8 @@ protected:
 
 };
 
+}
+
+}
 
 #endif

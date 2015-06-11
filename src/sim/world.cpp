@@ -5,6 +5,11 @@
 #include <stack>
 #include <algorithm>
 
+namespace era
+{
+namespace sim
+{
+
 // ----------------------------------------------------------------------------------------------------
 
 struct DepthFirstOrdering
@@ -175,4 +180,7 @@ void World::MarkAsChanged(Id id)
 
     o.changed = true;
     changed_object_ids_.push_back(id);
+}
+
+}
 }

@@ -1,6 +1,11 @@
 #include "era/sim/sensors/rasterizer.h"
 #include "era/geometry/mesh.h"
 
+namespace era
+{
+namespace sim
+{
+
 void Rasterizer::rasterize(const Mesh& mesh, const Transform3f& pose, float* canvas) const
 {
 
@@ -259,4 +264,7 @@ void Rasterizer::sort(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3, int i,
             p_min = p2; p_mid = p3; p_max = p1;
         }
     }
+}
+
+}
 }

@@ -15,6 +15,11 @@ void renderPoint(int i, float d, float* ranges)
 
 }
 
+namespace era
+{
+namespace sim
+{
+
 // ----------------------------------------------------------------------------------------------------
 
 LRFRenderer::LRFRenderer() : a_min_(0), a_max_(0), range_min_(0), range_max_(0), num_beams_(0)
@@ -449,4 +454,7 @@ double LRFRenderer::getAngle(double x, double y)
     }
 
     return a;
+}
+
+}
 }

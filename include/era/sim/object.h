@@ -5,6 +5,11 @@
 #include "math.h"
 #include "era/geometry/mesh.h"
 
+namespace era
+{
+namespace sim
+{
+
 struct Object
 {
     Object() : parent_id(INVALID_ID), revision(0), changed(false) {}
@@ -17,12 +22,15 @@ struct Object
     std::string name;
     Transform3 transform;
     Transform3 abs_transform;
-    Mesh mesh;
+    era::Mesh mesh;
     uint64_t revision;
 
     bool changed;
 
     bool has_parent() const { return parent_id != INVALID_ID; }
 };
+
+}
+}
 
 #endif

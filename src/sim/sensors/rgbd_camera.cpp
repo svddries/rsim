@@ -3,7 +3,10 @@
 #include "era/sim/world.h"
 #include "era/sim/update.h"
 
-//#include <opencv2/highgui/highgui.hpp>
+namespace era
+{
+namespace sim
+{
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -80,6 +83,10 @@ void RGBDCamera::Update(const World& world, WorldUpdate& u)
 //        cv::imshow("depth", img / 8);
 //        cv::waitKey(3);
 //    }
+
+}
+
+}
 
 }
 

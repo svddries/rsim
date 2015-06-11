@@ -11,6 +11,11 @@
 
 #include "rasterizer.h"
 
+namespace era
+{
+namespace sim
+{
+
 class RGBDCamera : public Behavior
 {
 
@@ -38,5 +43,8 @@ private:
     io::Vector<float> canvas_;
 
 };
+
+}
+}
 
 #endif
