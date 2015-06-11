@@ -94,6 +94,9 @@ public:
         return true;
     }
 
+    // TODO
+    void addError(const std::string& s) { std::cout << s << std::endl; }
+
 private:
 
     Data& data_;

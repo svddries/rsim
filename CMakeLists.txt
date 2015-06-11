@@ -3,10 +3,20 @@ project(rsim)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-include_directories(
-    include
-    3rdparty
-)
+include_directories(include)
+
+# ----------------------------------------------------------------------------------------------------
+#                                            EXTERNALS
+# ----------------------------------------------------------------------------------------------------
+
+include_directories(external)
+
+# YAML-CPP
+include_directories(external/yaml-cpp/include)
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "Enable testing and parse tools")
+set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "Enable contrib stuff in library")
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build Shared Libraries")
+add_subdirectory(external/yaml-cpp)
 
 # ----------------------------------------------------------------------------------------------------
 
@@ -46,10 +56,13 @@ add_library(era_config
     include/era/config/writer.h
     include/era/config/parser.h
     include/era/config/emitter.h
+    include/era/config/yaml.h
 
     src/config/parser.cpp
     src/config/emitter.cpp
+    src/config/yaml.cpp
 )
+target_link_libraries(era_config yaml-cpp)
 
 # ----------------------------------------------------------------------------------------------------
 
@@ -97,3 +110,6 @@ target_link_libraries(rsim_test_rgbd era_io ${OpenCV_LIBS})
 
 add_executable(rsim_test_lrf test/test_lrf.cpp)
 target_link_libraries(rsim_test_lrf era_io era_sim ${OpenCV_LIBS})
+
+add_executable(test_config test/test_config.cpp)
+target_link_libraries(test_config era_config ${OpenCV_LIBS})
