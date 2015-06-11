@@ -297,6 +297,17 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    // Add the heightmap
+    Object heightmap;
+    era::loadHeightmap(heightmap_filename, 0.01, 1.5, heightmap.mesh);
+    Id heightmap_id = w.AddObject(heightmap);
+
+    {
+        Mat3 m;
+        m.setRPY(0, 0, 3.1415 + 1.58);
+        w.SetObjectParent(heightmap_id, w.root(), Transform3(m, Vec3(1, 2.5, 0)));
+    }
+
     // Add robot to the world
     Mat3 m;
     m.setRPY(0, 0, 0);
@@ -305,8 +316,7 @@ int main(int argc, char **argv)
     // Add a box to the world
     Object box;
     box.name = "box";
-//    createBox(Vec3(-0.4, -0.4, -0.4), Vec3(0.4, 0.4, 0.4), box.mesh);
-    era::loadHeightmap(heightmap_filename, 0.01, 0.5, box.mesh);
+    createBox(Vec3(-0.4, -0.4, -0.4), Vec3(0.4, 0.4, 0.4), box.mesh);
 
     Id box_id = w.AddObject(box);
     w.SetObjectParent(box_id, w.root(), Transform3(Mat3::identity(), Vec3(4, 0.5, 0.3)));
