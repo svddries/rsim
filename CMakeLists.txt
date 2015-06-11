@@ -129,4 +129,4 @@ add_executable(test_config test/test_config.cpp)
 target_link_libraries(test_config era_config ${OpenCV_LIBS})
 
 add_executable(test_heightmap test/test_heightmap.cpp)
-target_link_libraries(test_heightmap era_geometry)
+target_link_libraries(test_heightmap era_geometry ${OpenCV_LIBS})
