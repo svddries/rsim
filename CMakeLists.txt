@@ -8,7 +8,7 @@ include_directories(
     3rdparty
 )
 
-# ---------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 add_library(era_geometry
     include/era/geometry/mesh.h
@@ -16,7 +16,7 @@ add_library(era_geometry
     src/geometry/primitives.cpp
 )    
 
-# ---------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 add_library(era_io
     include/era/io/memory.h
@@ -28,7 +28,30 @@ add_library(era_io
 )
 target_link_libraries(era_io rt)
 
-# ---------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
+
+#add_library(era_io_old
+#    include/era/io/old/data.h
+#    include/era/io/old/writer.h
+#    include/era/io/old/json_writer.h
+#    include/era/io/old/binary_writer.h
+#)
+
+# ----------------------------------------------------------------------------------------------------
+
+add_library(era_config
+    include/era/config/variant.h
+    include/era/config/data.h
+    include/era/config/reader.h
+    include/era/config/writer.h
+    include/era/config/parser.h
+    include/era/config/emitter.h
+
+    src/config/parser.cpp
+    src/config/emitter.cpp
+)
+
+# ----------------------------------------------------------------------------------------------------
 
 add_library(era_sim
     src/sim/world.cpp
@@ -60,7 +83,7 @@ add_executable(rsim
 
 target_link_libraries(rsim era_sim era_geometry era_io)
 
-# ----------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------
 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
