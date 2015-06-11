@@ -142,7 +142,7 @@ void Rasterizer::drawTriangle2D(const Vec3f& p1, const Vec3f& p2, const Vec3f& p
         int min_x = std::min<int>(p1.x, std::min<int>(p2.x, p3.x));
         int max_x = std::max<int>(p1.x, std::max<int>(p2.x, p3.x));
 
-        if (min_x < canvas_width_ && max_x > 0 && min_y < canvas_height_ && max_y > 0) {
+        if (min_x < canvas_width_ || max_x > 0 || min_y < canvas_height_ || max_y > 0) {
 
             if (min_y == max_y) {
                 Vec3f p_min, p_mid, p_max;
