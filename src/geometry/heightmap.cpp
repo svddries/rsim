@@ -221,10 +221,10 @@ bool loadHeightmap(const std::string filename, double resolution, double blockhe
                     TPPLPoly poly;
                     poly.Init(num_points);
 
+                    unsigned int n = mesh.vertices.size();
+
                     for(unsigned int i = 0; i < num_points; ++i)
                     {
-                        std::cout << points[i] << std::endl;
-
                         poly[i].x = points[i].x;
                         poly[i].y = points[i].y;
 
@@ -242,8 +242,8 @@ bool loadHeightmap(const std::string filename, double resolution, double blockhe
                     for(unsigned int i = 0; i < num_points; ++i)
                     {
                         int j = (i + 1) % num_points;
-                        mesh.addTriangle(i * 2, i * 2 + 1, j * 2);
-                        mesh.addTriangle(i * 2 + 1, j * 2 + 1, j * 2);
+                        mesh.addTriangle(n + i * 2, n + i * 2 + 1, n + j * 2);
+                        mesh.addTriangle(n + i * 2 + 1, n + j * 2 + 1, n + j * 2);
                     }
 
 //                    for(unsigned int i = 0; i < line_starts.size(); ++i)
