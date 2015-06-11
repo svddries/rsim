@@ -1,9 +1,9 @@
-#include <iostream>
-
 #include "era/config/data.h"
 #include "era/config/yaml.h"
 
 #include "era/config/emitter.h"
+
+#include <iostream>
 
 int main(int argc, char **argv)
 {
@@ -16,10 +16,12 @@ int main(int argc, char **argv)
     }
     else
     {
-        std::string yaml = "{a: 123, b: 456, c: { e: [{f: 456}]}}";
+        std::string yaml = "{a: 123, b: 456, c: { e: [{f: 456}, {f: 789}]}}";
         era::config::yaml::parseString(yaml, data);
     }
 
+    era::config::emit(data, std::cout, era::config::EMIT_YAML);
+    std::cout << "---------------------" << std::endl;
     era::config::emit(data, std::cout, era::config::EMIT_JSON);
 
     return 0;
