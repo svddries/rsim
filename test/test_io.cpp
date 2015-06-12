@@ -1,73 +1,88 @@
-#include <iostream>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/allocators/allocator.hpp>
+#include <boost/interprocess/containers/map.hpp>
+#include <boost/interprocess/containers/vector.hpp>
+#include <boost/interprocess/containers/string.hpp>
 
-#include "../src/io/package.h"
-#include "../src/io/value.h"
-#include "../src/io/vector.h"
-#include "../src/io/memory.h"
+namespace ipc = boost::interprocess;
 
-struct TestStruct
+//Typedefs of allocators and containers
+typedef ipc::managed_shared_memory::segment_manager                       segment_manager_t;
+typedef ipc::allocator<void, segment_manager_t>                           void_allocator;
+
+namespace io
 {
-    int a;
-    float f;
+
+typedef ipc::basic_string<char, std::char_traits<char>, ipc::allocator<char, segment_manager_t> > string;
+
+template <typename T>
+using vector = ipc::vector<T, ipc::allocator<T, segment_manager_t> >;
+
+
+}
+
+// ----------------------------------------------------------------------------------------------------
+
+class ComplexData
+{
+
+public:
+
+    ComplexData(int id, const char *name, const void_allocator &void_alloc)
+        : id_(id), char_string_(name, void_alloc), v(void_alloc)
+    {}
+
+    int id_;
+    io::string char_string_;
+    io::vector<int> v;
+
 };
 
-int main(int argc, char **argv)
+// ----------------------------------------------------------------------------------------------------
+
+int main ()
 {
-    io::Package pkg;
-    io::GrowingBuffer specification;
+   //Remove shared memory on construction and destruction
+   struct shm_remove
+   {
+      shm_remove() { ipc::shared_memory_object::remove("MySharedMemory"); }
+      ~shm_remove(){ ipc::shared_memory_object::remove("MySharedMemory"); }
+   } remover;
 
-    {
-        io::Value<float> width;
-        io::Value<float> height;
-        io::Value<TestStruct> test;
-        io::Vector<int> v(10);
+   {
+       //Create shared memory
+       ipc::managed_shared_memory segment(ipc::create_only,"MySharedMemory", 65536);
 
-        pkg.add("width", width);
-        pkg.add("height", height);
-        pkg.add("test", test);
-        pkg.add("v", v);
+       //An allocator convertible to any allocator<T, segment_manager_t> type
+       void_allocator alloc_inst (segment.get_segment_manager());
 
-        std::cout << pkg.size() << std::endl;
+       //Construct the shared memory map and fill it
+       ComplexData* data = segment.construct<ComplexData>("MyData")(5, "test", alloc_inst);
 
-        pkg.create();
+       for(int i = 0; i < 2000; ++i)
+       {
+           data->v.push_back(i);
+           std::cout << i << ": " << &data->v[0] << std::endl;
+       }
 
-        *width = 1.23;
-        *height = 4.56;
+       std::cout << &data->v[0] << std::endl;
+   }
 
-        test->a = 43;
+   {
+       //Open the managed segment
+       ipc::managed_shared_memory segment(ipc::open_only, "MySharedMemory");
 
-        v.set_size(5);
-        for(int i = 0; i < v.size(); ++i)
-            v[i] = i;
+       //Find the vector using the c-string name
+       ComplexData* data = segment.find<ComplexData>("MyData").first;
 
-        pkg.SerializeSpecification(specification);
-    }
+       std::cout << &data->v[0] << std::endl;
 
-    {
-        io::Package pkg2;
-        pkg2.DeserializeSpecification(specification.ptr());
+//       for(unsigned int i = 0; i < data->v.size(); ++i)
+//           std::cout << data->v[i] << std::endl;
 
-        io::Value<float> width;
-        io::Value<float> height;
-        io::Value<TestStruct> test;
-        io::Vector<int> v;
+       //When done, destroy the vector from the segment
+       segment.destroy<ComplexData>("MyData");
+   }
 
-        pkg.map("width", width);
-        pkg.map("height", height);
-        pkg.map("test", test);
-        pkg.map("v", v);
-
-        pkg2.mapTo(pkg.ptr());
-
-        std::cout << *width << " " << *height << std::endl;
-
-        std::cout << test->a << std::endl;
-
-        for(auto a : v)
-            std::cout << a << std::endl;
-    }
-
-//    std::cout << pkg.size() << std::endl;
-
-    return 0;
+   return 0;
 }

@@ -115,9 +115,8 @@ target_link_libraries(rsim era_sim era_geometry era_io era_config)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-#add_executable(rsim_test_io
-#    test/test_io.cpp
-#)
+add_executable(rsim_test_io test/test_io.cpp)
+target_link_libraries(rsim_test_io era_io pthread)
 
 add_executable(rsim_test_rgbd test/test_rgbd.cpp)
 target_link_libraries(rsim_test_rgbd era_io ${OpenCV_LIBS})
