@@ -1,3 +1,6 @@
 [submodule "external/yaml-cpp"]
 	path = external/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
+[submodule "external/polypartition"]
+	path = external/polypartition
+	url = https://github.com/svddries/polypartition
