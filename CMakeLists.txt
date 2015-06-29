@@ -139,3 +139,6 @@ add_executable(test_input test/test_input.cpp)
 add_executable(test_websocket test/test_websocket.cpp)
 target_link_libraries(test_websocket boost_system)
 
+add_executable(test_websocket2 test/test_websocket2.cpp)
+target_link_libraries(test_websocket2 boost_system)
+
