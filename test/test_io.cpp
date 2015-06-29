@@ -28,6 +28,10 @@ class ComplexData
 
 public:
 
+    ComplexData(const void_allocator &void_alloc)
+        : char_string_(void_alloc), v(void_alloc)
+    {}
+
     ComplexData(int id, const char *name, const void_allocator &void_alloc)
         : id_(id), char_string_(name, void_alloc), v(void_alloc)
     {}
@@ -37,6 +41,14 @@ public:
     io::vector<int> v;
 
 };
+
+struct Foo
+{
+    Foo(const void_allocator& alloc) : v(alloc) {}
+
+    io::vector<ComplexData> v;
+};
+
 
 // ----------------------------------------------------------------------------------------------------
 
@@ -65,6 +77,12 @@ int main ()
            std::cout << i << ": " << &data->v[0] << std::endl;
        }
 
+       Foo* foo = segment.construct<Foo>("Foo")(alloc_inst);
+       foo->v.push_back(*data);
+       foo->v.push_back(ComplexData(alloc_inst));
+       ComplexData& c = foo->v.back();
+       c.char_string_ = "Hello World";
+
        std::cout << &data->v[0] << std::endl;
    }
 
@@ -74,8 +92,14 @@ int main ()
 
        //Find the vector using the c-string name
        ComplexData* data = segment.find<ComplexData>("MyData").first;
+       Foo* foo = segment.find<Foo>("Foo").first;
 
-       std::cout << &data->v[0] << std::endl;
+       ComplexData& c = foo->v[0];
+       std::cout << c.v.back() << std::endl;
+
+       std::cout << (char*)(data) - (char*)segment.get_address() << std::endl;
+
+       std::cout << (char*)(&c.v[0]) - (char*)segment.get_address() << std::endl;
 
 //       for(unsigned int i = 0; i < data->v.size(); ++i)
 //           std::cout << data->v[i] << std::endl;

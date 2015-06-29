@@ -42,6 +42,7 @@ add_library(era_io
     include/era/io/value.h
     include/era/io/vector.h
     include/era/io/package.h
+    include/era/io/time_buffer.h
 )
 target_link_libraries(era_io rt)
 
@@ -129,3 +130,5 @@ target_link_libraries(test_config era_config ${OpenCV_LIBS})
 
 add_executable(test_heightmap test/test_heightmap.cpp)
 target_link_libraries(test_heightmap era_geometry ${OpenCV_LIBS})
+
+add_executable(test_input test/test_input.cpp)

@@ -9,8 +9,32 @@
 
 #include <opencv2/highgui/highgui.hpp>
 
+#include "era/io/time_buffer.h"
+
+struct Bla
+{
+    Bla() : i(123) {}
+
+    ~Bla() { std::cout << "~Bla()" << std::endl; }
+
+    int i;
+};
+
 int main(int argc, char **argv)
 {
+    era::io::TimeBuffer<Bla>* b = era::io::TimeBuffer<Bla>::create(10);
+    era::io::TimeBuffer<Bla>* b2 = era::io::TimeBuffer<Bla>::map(b);
+
+    for(int i = 0; i < 20; ++i)
+    {
+        b->Add(123);// = i;
+        std::cout << b2->latest().i << std::endl;
+    }
+
+    delete b;
+
+    return 0;
+
     io::SharedMemory mem;
 
     io::Package pkg;
