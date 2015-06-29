@@ -4,3 +4,6 @@
 [submodule "external/polypartition"]
 	path = external/polypartition
 	url = https://github.com/svddries/polypartition
+[submodule "external/websocketpp"]
+	path = external/websocketpp
+	url = https://github.com/zaphoyd/websocketpp

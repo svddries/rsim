@@ -22,6 +22,9 @@ add_subdirectory(external/yaml-cpp)
 include_directories(external/polypartition/src)
 add_library(polypartition external/polypartition/src/polypartition.cpp)
 
+# Websocketpp
+include_directories(external/websocketpp)
+
 # ----------------------------------------------------------------------------------------------------
 
 add_library(era_geometry
@@ -132,3 +135,7 @@ add_executable(test_heightmap test/test_heightmap.cpp)
 target_link_libraries(test_heightmap era_geometry ${OpenCV_LIBS})
 
 add_executable(test_input test/test_input.cpp)
+
+add_executable(test_websocket test/test_websocket.cpp)
+target_link_libraries(test_websocket boost_system)
+
