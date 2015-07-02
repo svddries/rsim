@@ -26,13 +26,13 @@ Variant yamlScalarToVariant(const YAML::Node& n, std::string& error)
 {
     try
     {
-        return Variant(n.as<double>());
+        return Variant(n.as<int>());
     }
     catch (const YAML::BadConversion& e) {}
 
     try
     {
-        return Variant(n.as<int>());
+        return Variant(n.as<double>());
     }
     catch (const YAML::BadConversion& e) {}
 
