@@ -38,6 +38,14 @@ target_link_libraries(era_geometry png polypartition)
 
 # ----------------------------------------------------------------------------------------------------
 
+add_library(era_visualization
+    include/era/visualization/websocket_scene_graph.h
+    src/visualization/websocket_scene_graph.cpp
+)
+target_link_libraries(era_visualization era_config boost_system)
+
+# ----------------------------------------------------------------------------------------------------
+
 add_library(era_io
     include/era/io/memory.h
     include/era/io/shared_memory.cpp
@@ -140,5 +148,5 @@ add_executable(test_websocket test/test_websocket.cpp)
 target_link_libraries(test_websocket boost_system)
 
 add_executable(test_websocket2 test/test_websocket2.cpp)
-target_link_libraries(test_websocket2 boost_system)
+target_link_libraries(test_websocket2 era_visualization)
 

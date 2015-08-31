@@ -15,6 +15,8 @@ var url;
 var panX = 0;
 var panY = 0;
 
+var graph_revision = 0;
+
 function connect() {
 	url = document.getElementById("server_url").value;
 	
@@ -45,26 +47,17 @@ function connect() {
 	};
 	
 	ws.onmessage = function(e) {
+        document.getElementById("messages").innerHTML += e.data;
+
 		var obj = JSON.parse(e.data)
-		// document.getElementById("messages").innerHTML += "Server: "+obj+"<br />";
+        document.getElementById("messages").innerHTML += "Revision = "+obj.rev+"<br />";
 
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");
+        graph_revision = obj.rev;
 
-		ctx.clearRect(0, 0, c.width, c.height);
-
-		var angle_incr = (obj.angle_max - obj.angle_min) / (obj.ranges.length - 1)
-		for (var i = 0; i < obj.ranges.length; i++) {
-			var angle = obj.angle_min + i * angle_incr
-			var r = obj.ranges[i]
-			var px = Math.sin(angle) * r
-			var py = -Math.cos(angle) * r
-
-			ctx.beginPath();
-			ctx.arc(250 + px * 30 - panX, 250 + py * 30 - panY, 2, 0, 2*Math.PI);
-			ctx.stroke();
-		}
-
+        for(var i = 0; i < obj.updates.length; i++) {
+            var u = obj.updates[i];
+            console.log(u)        
+        }
 	};
 }
 
@@ -86,9 +79,9 @@ function toggle_connect() {
 	}
 }
 
-function send_text() {
-    text = document.getElementById("text_to_send").value;
-    ws.send(text);
+function request_update() {
+    ws.send("{\"rev\": "+graph_revision+"}");
+    graph_revision += 1
 }
 
 window.addEventListener("load", windowLoadHandler, false);
@@ -175,8 +168,7 @@ body,html {
 	<button id="toggle_connect" onclick="toggle_connect();">Connect</button>
 	</div>
     <div id="test">
-    <input type="text" name="text" id="text_to_send" value="Hello world" /><br />
-	<button id="send_text" onclick="send_text();">Send</button>
+	<button id="update" onclick="request_update();">Update</button>
     </div>
 </div>
 <div id="messages"></div>
