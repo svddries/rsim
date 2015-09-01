@@ -31,16 +31,16 @@ public:
     {
         const Node& n = nodes_[id];
 
-        for(const auto& edge_id : n.child_edge_ids_)
+        for(const auto& edge_id : n.child_edge_ids)
         {
             const Edge& e = edges_[edge_id];
-            nodes_[e.child].removeParentEdge(edge_id);
+            nodes_[e.child].removeParentEdge(e);
         }
 
-        for(const auto& edge_id : n.parent_edge_ids_)
+        for(const auto& edge_id : n.parent_edge_ids)
         {
             const Edge& e = edges_[edge_id];
-            nodes_[e.parent].removeChildEdge(edge_id);
+            nodes_[e.parent].removeChildEdge(e);
         }
 
         nodes_.remove(id);
@@ -50,9 +50,13 @@ public:
     {
         // TODO: do not add edge if it already exists
 
-        Id edge_id = edges_.add(Edge(e, n1, n2));
-        nodes_[n1].child_edge_ids_.push_back(edge_id);
-        nodes_[n2].parent_edge_ids_.push_back(edge_id);
+        Id edge_id = edges_.add(Edge(e, n1, n2,
+                                     nodes_[n1].child_edge_ids.size(),
+                                     nodes_[n2].parent_edge_ids.size()
+                                     ));
+
+        nodes_[n1].child_edge_ids.push_back(edge_id);
+        nodes_[n2].parent_edge_ids.push_back(edge_id);
         return edge_id;
     }
 
@@ -62,7 +66,7 @@ public:
         {
             std::cout << n.value << std::endl;
 
-            for(const Id& edge_id : n.child_edge_ids_)
+            for(const Id& edge_id : n.child_edge_ids)
             {
                 const Edge& e = edges_[edge_id];
                 std::cout << "    -- " << e.value << " -> " << nodes_[e.child].value << std::endl;
@@ -72,51 +76,47 @@ public:
 
 private:
 
+    struct Edge
+    {
+        Edge() {}
+        Edge(const E& value_, const Id& parent_, const Id& child_, uint64_t edge_idx_parent_, uint64_t edge_idx_child_)
+            : value(value_), parent(parent_), child(child_), edge_idx_parent(edge_idx_parent_), edge_idx_child(edge_idx_child_) {}
+
+        E value;
+        Id parent;
+        Id child;
+
+        // The index of this edge in the parent list
+        uint64_t edge_idx_parent;
+
+        // The index of this edge in the child list
+        uint64_t edge_idx_child;
+    };
+
     struct Node
     {
         Node() {}
         Node(const N& value_) : value(value_) {}
 
-        void removeParentEdge(const Id& id)
+        void removeParentEdge(const Edge& e)
         {
-            for(Id& id2 : parent_edge_ids_)
-            {
-                if (id2.idx == id.idx)
-                {
-                    id2 = parent_edge_ids_.back();
-                    parent_edge_ids_.pop_back();
-                    break;
-                }
-            }
+            parent_edge_ids[e.edge_idx_child] = parent_edge_ids.back();
+            parent_edge_ids.pop_back();
         }
 
-        void removeChildEdge(const Id& id)
+        void removeChildEdge(const Edge& e)
         {
-            for(Id& id2 : child_edge_ids_)
-            {
-                if (id2.idx == id.idx)
-                {
-                    id2 = child_edge_ids_.back();
-                    child_edge_ids_.pop_back();
-                    break;
-                }
-            }
+            child_edge_ids[e.edge_idx_parent] = child_edge_ids.back();
+            child_edge_ids.pop_back();
         }
 
         N value;
-        std::vector<Id> parent_edge_ids_;
-        std::vector<Id> child_edge_ids_;
-    };
 
-    struct Edge
-    {
-        Edge() {}
-        Edge(const E& value_, const Id& parent_, const Id& child_)
-            : value(value_), parent(parent_), child(child_) {}
+        // Ids of the edges for which this node is the parent
+        std::vector<Id> parent_edge_ids;
 
-        E value;
-        Id parent;
-        Id child;
+        // Ids of the edges for which this node is the child
+        std::vector<Id> child_edge_ids;
     };
 
     ArraySet<Node> nodes_;
