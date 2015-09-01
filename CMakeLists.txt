@@ -150,3 +150,8 @@ target_link_libraries(test_websocket boost_system)
 add_executable(test_websocket2 test/test_websocket2.cpp)
 target_link_libraries(test_websocket2 era_visualization)
 
+add_executable(test_datastructures test/test_datastructures.cpp
+include/era/datastructures/graph.h
+include/era/datastructures/array_set.h)
+
+
