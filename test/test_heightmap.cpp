@@ -4,9 +4,6 @@
 // Visualization
 #include <opencv2/highgui/highgui.hpp>
 
-
-
-
 int main(int argc, char **argv)
 {
     if (argc < 2)

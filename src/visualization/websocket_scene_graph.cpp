@@ -66,7 +66,7 @@ public:
             std::cout << "WARNING: received request without 'rev' field." << std::endl;
 
         // Send scene graph update (since revision 'rev')
-        send(wsg_->CreateDifferenceMessage(rev));
+        send(hdl, wsg_->CreateDifferenceMessage(rev));
     }
 
     void on_open(websocketpp::connection_hdl hdl)
@@ -74,19 +74,24 @@ public:
         connections_.insert(hdl);
     }
 
-    void send(const std::string& msg)
+    void send(websocketpp::connection_hdl c, const std::string& msg)
+    {
+        try
+        {
+            server_->send(c, msg, websocketpp::frame::opcode::text);
+        }
+        catch (websocketpp::exception& e)
+        {
+            std::cout << e.what() << std::endl;
+            connections_.erase(c);
+        }
+    }
+
+    void sendAll(const std::string& msg)
     {
         for(auto& c : connections_)
         {
-            try
-            {
-                server_->send(c, msg, websocketpp::frame::opcode::text);
-            }
-            catch (websocketpp::exception& e)
-            {
-                std::cout << e.what() << std::endl;
-                connections_.erase(c);
-            }
+            send(c, msg);
         }
     }
 
