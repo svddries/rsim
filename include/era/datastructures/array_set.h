@@ -13,6 +13,22 @@ struct Id
     Id(uint64_t idx_, uint64_t rev_) : idx(idx_), rev(rev_) {}
     uint64_t idx;
     uint64_t rev;
+
+    bool operator<(const Id& rhs)
+    {
+        return (idx < rhs.idx || rev < rhs.rev);
+    }
+
+    bool operator==(const Id& rhs)
+    {
+        return (idx == rhs.idx && rev == rhs.rev);
+    }
+
+    bool operator!=(const Id& rhs)
+    {
+        return !(*this == rhs);
+    }
+
 };
 
 template<typename T>
